@@ -21,6 +21,13 @@ export default {
       title: 'Main image'
     },
     {
+      name: 'frontPageContent',
+      type: 'reference',
+      description: 'Blog post',
+      title: 'Blog post',
+      to: [{type: 'post'}]
+    },
+    {
       name: 'keywords',
       type: 'array',
       title: 'Keywords',

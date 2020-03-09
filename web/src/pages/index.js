@@ -3,13 +3,15 @@ import {graphql} from 'gatsby'
 import {
   mapEdgesToNodes,
   filterOutDocsWithoutSlugs,
-  filterOutDocsPublishedInTheFuture
+  filterOutDocsPublishedInTheFuture,
+  buildImageObj
 } from '../lib/helpers'
 import BlogPostPreviewList from '../components/blog-post-preview-list'
 import Container from '../components/container'
 import GraphQLErrorList from '../components/graphql-error-list'
 import SEO from '../components/seo'
 import Layout from '../containers/layout'
+import {imageUrlFor} from '../lib/image-url'
 
 export const query = graphql`
   fragment SanityImage on SanityMainImage {
@@ -37,6 +39,10 @@ export const query = graphql`
   query IndexPageQuery {
     site: sanitySiteSettings(_id: { regex: "/(drafts.|)siteSettings/" }) {
       title
+      mainImageFront {
+        ...SanityImage
+        alt
+      }
       description
       keywords
     }
@@ -97,6 +103,21 @@ const IndexPage = props => {
       />
       <Container>
         <h1 hidden>Welcome to {site.title}</h1>
+        <div>
+          {site.mainImageFront && (
+            <img
+              src={imageUrlFor(buildImageObj(site.mainImageFront))
+                .width(600)
+                .height(Math.floor((9 / 16) * 600))
+                .auto('format')
+                .url()}
+              alt={site.mainImageFront.alt}
+            />
+          )}
+        </div>
+        {site.frontPageContent && (
+          <p> Hallo</p>
+        )}
         {postNodes && (
           <BlogPostPreviewList
             title='Latest blog posts'
